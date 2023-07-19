@@ -12,3 +12,8 @@ for就是一个内存共享的，所以for循环里面，赋值某个数值都�
 分布式系统：
 通信：怎么通信，RPC调用，HTTP调用等，通信出现的问题
 
+计算中文个数：
+println(utf8.RuneCountInString("你好"))
+字符串处理：
+使用strings包就可以了。
+
