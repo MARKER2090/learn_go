@@ -8,6 +8,13 @@
 */
 package main
 
-func main() {
+import "fmt"
 
+func main() {
+	s := []int{1, 2, 3, 4, 5}
+	fmt.Println(delWords(3, s))
+}
+
+func delWords(n int, s []int) []int {
+	return append(s[:n-1], s[n:]...)
 }
