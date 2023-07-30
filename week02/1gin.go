@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +8,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Gin框架")
 	//创建一个服务
 	ginserver := gin.Default()
 	ginserver.Use(favicon.New("favicon.png"))
