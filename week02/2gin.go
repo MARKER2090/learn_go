@@ -1,5 +1,6 @@
 /*
 学习gin框架2
+学会restful风格去设计路由,路由都放入到web文件夹内，方便管理
 */
 package main
 
