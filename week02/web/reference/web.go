@@ -8,7 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// UserHandler 我准备在它上面定义跟用户有关的路由
+/*
+functions:UserHandler 我准备在它上面定义跟用户有关的路由
+arguments:nil
+return:经过编译的邮箱和密码的正则表达式
+tips:
+*/
 type UserHandler struct {
 	emailExp    *regexp.Regexp
 	passwordExp *regexp.Regexp
@@ -27,6 +32,12 @@ func NewUserHandler() *UserHandler {
 	}
 }
 
+/*
+functions:注册路由,含有所有的注册路由,这是作为用户处理userhandler的方法
+arguments:
+return:
+tips:这是使用了路由组的
+*/
 func (u *UserHandler) RegisterRoutesV1(ug *gin.RouterGroup) {
 	//注册了多个路由
 	ug.GET("/profile", u.Profile)
@@ -35,10 +46,16 @@ func (u *UserHandler) RegisterRoutesV1(ug *gin.RouterGroup) {
 	ug.POST("/edit", u.Edit)
 }
 
+/*
+functions:注册所有路由
+arguments:
+return:
+tips:非路由组的情况
+*/
 func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	//注册了多个路由
 	ug := server.Group("/users")
-	ug.GET("/profile", u.Profile)
+	ug.GET("/profile", u.Profile) //u是邮件和密码的正则表达式结构体的方法,方法的
 	ug.POST("/signup", u.SignUp)
 	ug.POST("/login", u.Login)
 	ug.POST("/edit", u.Edit)

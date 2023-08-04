@@ -1,6 +1,7 @@
 /*
 学习gin框架2
 学会restful风格去设计路由,路由都放入到web文件夹内，方便管理
+具体操作：就是gin1里面的路由全部分开来
 */
 package main
 
@@ -12,8 +13,10 @@ import (
 )
 
 func main() {
-	router := gin.Default() //新建一个engin
+	router := gin.Default() //新建一个*gin.Engin
 
+	//设置分组
+	users := router.Group("/users/ddd")
 	//静态路由
 	router.GET("/hello", func(c *gin.Context) {
 		//c.String(http.StatusOK, "你好！这是gin web框架")
