@@ -6,8 +6,7 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"studygin/web"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,32 +14,16 @@ import (
 func main() {
 	router := gin.Default() //新建一个*gin.Engin
 
-	//设置分组
-	users := router.Group("/users/ddd")
-	//静态路由
-	router.GET("/hello", func(c *gin.Context) {
-		//c.String(http.StatusOK, "你好！这是gin web框架")
-		c.String(300, "你好！这是gin web框架")
-		fmt.Println(c.Get("hello"))
-	})
+	////设置分组
+	//users := router.Group("/users/ddd")
 
-	//参数路由
-	router.GET("/users/:name", func(c *gin.Context) {
-		name := c.Param("name")
-		c.String(http.StatusOK, "这是你传过来的名字%s", name)
-	})
-
-	//通配符路由
-	router.GET("/views/*.html", func(c *gin.Context) {
-		path := c.Param(".html")
-		c.String(http.StatusOK, "这是你传过来的名字%s", path)
-	})
-
-	//查询参数
-	router.GET("/order", func(c *gin.Context) {
-		id := c.Query("id")
-		c.String(http.StatusOK, "这是你传过来的名字%s", id)
-	})
+	////这是属于/user/ddd组的，需要访问的网址是http://localhost:8082/users/ddd/hello
+	//users.GET("/hello", func(c *gin.Context) {
+	//	c.String(http.StatusOK, "可以访问！200")
+	//})
+	c := web.NewUserHandler()
+	//对所有的路由都进行注册
+	c.RegitsterRouter(router)
 
 	router.Run(":8082") //运行框架
 }
