@@ -4,6 +4,8 @@ handler包：装路由
 package web
 
 import (
+	"fmt"
+	"net/http"
 	"regexp"
 
 	"github.com/gin-gonic/gin"
@@ -22,11 +24,11 @@ return:指针
 tips:就是一个简单的golang自带的正则表达式编译
 */
 func NewUserHandler() *UserHandler {
-	const (
-		//定义email的正则表达式:随意搭配+@+随意搭配+.com
-		emailRegexPttern = ``
-		//定义密码的正则表达式：必须含有英文和中文和特殊符号,且不小于8位数
-		passwordRegexPttern = ``
+	const ( //如果正则表达式比较复杂，可以多写几个逻辑要求来对邮箱和密码进行处理，弥补自己正则表达式的书写缺陷
+		//定义email的正则表达式:随意搭配+@+随意搭配+.com，自己写的正则表达式
+		emailRegexPttern = `[a-zA-Z0-9]+@\w+(\.com)$`
+		//定义密码的正则表达式：必须含有英文和中文和特殊符号,且不小于8位数,自己写的要求可以填入非空字符，要求8个以上
+		passwordRegexPttern = `\S{8,50}`
 	)
 	emailExp_compiled := regexp.MustCompile(emailRegexPttern)
 	passwordExp_compiled := regexp.MustCompile(passwordRegexPttern)
@@ -45,23 +47,56 @@ func (c *UserHandler) RegitsterRouter(server *gin.Engine) {
 	server.POST("/edit", c.Edit)
 }
 
+/*
+这是分组管理的方法
+避免路由种类太多导致管理麻烦，或者输入前缀容易出错
+*/
+func (c *UserHandler) RegitsterRouterV1(ug *gin.RouterGroup) {
+	//ug := server.Group("/users") //注意：users后面不再加斜杠
+	ug.GET("/profile", c.Profile)
+	ug.POST("/signin", c.SignIn)
+	ug.POST("/signup", c.SignUp)
+	ug.POST("/edit", c.Edit)
+}
+
 func (u *UserHandler) SignUp(ctx *gin.Context) {
 	//定义注册的string结构体
 	type SignUpReq struct {
 		Email           string `json:"email"`
-		ConfirmPassword string `json:"confirmpassword"`
+		ConfirmPassword string `json:"confirmPassword"`
 		Password        string `json:"password"`
 	}
 	var req SignUpReq
 	//对上下文进行数据绑定解释
+	/*
+		理解：
+		可以理解Bind方法会根据Content-Type来解释我的数据到达req里去
+		解释错了，会直接返回一个400错误，其他啥都不用管
+	*/
+	fmt.Println("开始对接收到的文档进行处理")
 	if err := ctx.Bind(&req); err != nil {
 		return
 	}
-	isExist := u.emailExp.MatchString(req.Email)
-	if isExist == true {
-		//检测到存在
-		//next:继续对帐号和密码进行逻辑处理
+	emailIsExist := u.emailExp.MatchString(req.Email)
+	if emailIsExist == false {
+		//检测到存在,也就是通过了测试，邮箱没有问题
+		ctx.String(http.StatusBadRequest, "你的邮箱格式不对,请重新输入")
+		return
 	}
+	passwordIsExist := u.passwordExp.MatchString(req.Password)
+	if passwordIsExist == false {
+		//不通过
+		ctx.String(http.StatusBadRequest, "你的密码格式不对,请重新输入")
+		return
+	} else {
+		//通过了测试，邮箱没有问题
+		if req.Password != req.ConfirmPassword {
+			ctx.String(http.StatusBadRequest, "两次输入的密码不一致")
+			return
+		}
+	}
+	ctx.String(http.StatusOK, "注册成功")
+	fmt.Println("req是：", req)
 }
 func (u *UserHandler) SignIn(ctx *gin.Context) {
 
@@ -70,7 +105,7 @@ func (u *UserHandler) Edit(ctx *gin.Context) {
 
 }
 func (u *UserHandler) Profile(ctx *gin.Context) {
-
+	ctx.String(http.StatusOK, "您已经访问到了profile")
 }
 
 var a string = `

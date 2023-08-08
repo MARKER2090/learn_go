@@ -23,7 +23,7 @@ func main() {
 	//})
 	c := web.NewUserHandler()
 	//对所有的路由都进行注册
-	c.RegitsterRouter(router)
-
+	//c.RegitsterRouter(router)
+	c.RegitsterRouterV1(router.Group("/users"))
 	router.Run(":8082") //运行框架
 }
