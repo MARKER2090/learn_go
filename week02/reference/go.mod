@@ -1,11 +1,10 @@
-module studygin
+module tempweb
 
 go 1.20
 
 require (
-	github.com/gin-contrib/cors v1.4.0
+	github.com/dlclark/regexp2 v1.10.0
 	github.com/gin-gonic/gin v1.9.1
-	github.com/thinkerou/favicon v0.2.0
 )
 
 require (

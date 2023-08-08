@@ -1,7 +1,10 @@
 package main
 
 import (
-	"gitee.com/geekbang/basic-go/webook/internal/web"
+	//"gitee.com/geekbang/basic-go/webook/internal/web"
+
+	web "tempweb/tempweb"
+
 	"github.com/gin-gonic/gin"
 )
 
