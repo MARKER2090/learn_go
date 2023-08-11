@@ -6,8 +6,8 @@
 package main
 
 import (
+	"smartbook/internal/web"
 	"strings"
-	"studygin/web"
 	"time"
 
 	"github.com/gin-contrib/cors"
