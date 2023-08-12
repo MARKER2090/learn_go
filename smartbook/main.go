@@ -6,15 +6,41 @@
 package main
 
 import (
+	repository "smartbook/internal/repository"
+	"smartbook/internal/repository/dao"
+	"smartbook/internal/service"
 	"smartbook/internal/web"
 	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func main() {
+	//首先进行数据库初始化
+
+	//进行网页初始话
+	db, err := gorm.Open(mysql.Open("root@tcp(localhost:13316)/smartbook"))
+	if err != nil {
+		//我只在初始化过程中panic
+		//panic相当于整个goroutine结束，main程序直接就退出
+		panic(err)
+	}
+
+	err = dao.InitTable(db)
+	if err != nil {
+		panic(err)
+	}
+
+	ud := dao.NewUserDAO(db)
+	repo := repository.
+	repo := repository.NewUserRepository(ud)
+	svc := service.NewUserService(repo)
+	c := web.NewUserHandler(svc)
+
 	router := gin.Default() //新建一个*gin.Engin
 
 	//解决跨域问题
@@ -43,9 +69,12 @@ func main() {
 		},
 		MaxAge: 12 * time.Hour,
 	}))
-	c := web.NewUserHandler()
 	//对所有的路由都进行注册
 	//c.RegitsterRouter(router)
 	c.RegitsterRouterV1(router.Group("/users")) //设置分组
 	router.Run(":8082")                         //运行框架
+}
+
+func initDb() {
+
 }

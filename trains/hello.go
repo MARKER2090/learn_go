@@ -1,11 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"hello/pa"
+	"hello/pa/pb"
+)
 
 func main() {
 	a := "hello?"
-	fmt.Println("hello")
 	fmt.Println(a)
-	///=================
-	fmt.Println(a)
+	pb.PbFunc()
+	pa.PaFunc()
 }
