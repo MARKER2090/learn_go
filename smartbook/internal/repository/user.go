@@ -11,7 +11,7 @@ type UserRepository struct {
 }
 
 //直接调用dao数据库
-func (r *UserRepository) NewUserRepository(dao *dao.UserDAO) *UserRepository {
+func NewUserRepository(dao *dao.UserDAO) *UserRepository {
 	return &UserRepository{
 		dao: dao,
 	}

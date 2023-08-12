@@ -1,0 +1,23 @@
+apiVersion:apps/v1
+kind :Deployment
+metadata:
+  name:studygin
+spec:
+  # 副本数量
+  replicas:3
+  selector:
+    matchLabels:
+      app:studygin
+        #template秒数的你的POD是什么样的
+template:
+  metadata:
+    name: studygin
+    labels:
+      app:studygin
+  # POD的具体信息
+  spec:
+    containers:
+      - name:studygin
+        image:deyen/studygin:v0.0.1
+        ports:
+          - containerPost:8082

@@ -6,7 +6,8 @@
 package main
 
 import (
-	repository "smartbook/internal/repository"
+	"fmt"
+	"smartbook/internal/repository"
 	"smartbook/internal/repository/dao"
 	"smartbook/internal/service"
 	"smartbook/internal/web"
@@ -27,7 +28,8 @@ func main() {
 	if err != nil {
 		//我只在初始化过程中panic
 		//panic相当于整个goroutine结束，main程序直接就退出
-		panic(err)
+		fmt.Println(err)
+		//panic(err)
 	}
 
 	err = dao.InitTable(db)
@@ -36,7 +38,6 @@ func main() {
 	}
 
 	ud := dao.NewUserDAO(db)
-	repo := repository.
 	repo := repository.NewUserRepository(ud)
 	svc := service.NewUserService(repo)
 	c := web.NewUserHandler(svc)

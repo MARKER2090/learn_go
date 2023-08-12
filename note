@@ -45,3 +45,4 @@ docker相关知识：
 docker compose up -d 后台启动
 docker compose up 就是直接启动
 如何访问docker的mysql？
+
