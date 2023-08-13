@@ -45,4 +45,9 @@ docker相关知识：
 docker compose up -d 后台启动
 docker compose up 就是直接启动
 如何访问docker的mysql？
-在终端点击命令行
+在docker-desktop软件上，找到对应的mysql81-1,三个点那里，open in the terminal,进入命令行，输入
+mysql -uroot -p，然后密码是root（通过docker-compose.yaml文件查看）
+一进入后，需要输show databases;（注意分号）来查看数据库情况，然后输入
+use smartbook;
+select * from user;
+就可以查看到存储的账号密码了。

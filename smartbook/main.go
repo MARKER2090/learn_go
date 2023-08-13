@@ -16,7 +16,9 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
+
+	//"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -92,8 +94,8 @@ return:
 tips:
 */
 func initDB() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	//db, err := gorm.Open(mysql.Open("root@tcp(localhost:13316)/smartbook"))
+	//db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open("root:root@tcp(localhost:13316)/smartbook"))
 	if err != nil {
 		//我只在初始化过程中panic
 		//panic相当于整个goroutine结束，main程序直接就退出
