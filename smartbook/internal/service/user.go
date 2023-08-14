@@ -5,6 +5,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"smartbook/internal/domain"
 	"smartbook/internal/repository"
@@ -13,6 +14,7 @@ import (
 )
 
 var ErrUserDuplicateEmail = repository.ErrUserDuplicateEmail
+var ErrInvalidUserOrPassword = errors.New("邮箱/帐号或密码不对") //我们不能准确地告诉用户是帐号不对/密码不对，因为准确之后，攻击者会知道会存在某一个用户的。
 
 type UserService struct {
 	repo *repository.UserRepository
@@ -38,5 +40,19 @@ func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 
 func (svc *UserService) Login(ctx context.Context, email string, password string) error {
 	//先找用户
-	//next:看到2：06
+	u, err := svc.repo.FindByEmail(ctx, email)
+	if err == repository.ErrUserNotFound { //如果用户找不到//next:2:16
+		return ErrInvalidUserOrPassword
+	}
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	//比较密码了
+	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	if err != nil {
+		//debug，打印到日志
+		return ErrInvalidUserOrPassword //这里比较密码，如果密码对不上，那么就是返回邮箱/帐号/密码不对
+	}
+	return nil
 }

@@ -26,7 +26,7 @@ func main() {
 	//首先进行数据库初始化
 	db := initDB()
 	//进行网页初始化
-	router := initWebServer()
+	router := initWebServer() //返回一个*gin.Engine
 	initUser(router, db)
 
 	router.Run(":8082") //运行框架
@@ -41,7 +41,7 @@ tips:
 func initWebServer() *gin.Engine {
 	router := gin.Default() //新建一个*gin.Engin
 
-	//解决跨域问题
+	//使用use函数来解决跨域问题
 	router.Use(cors.New(cors.Config{
 		/*
 			alloworigins和alloworiginfunc可以只用其一

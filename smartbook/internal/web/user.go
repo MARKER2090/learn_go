@@ -124,6 +124,13 @@ func (u *UserHandler) SignUp(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "注册成功")
 	fmt.Println("req是：", req)
 }
+
+/*
+functions:Web页面的登录函数
+arguments:
+return:
+tips:需要层层调用，然后与数据库内的数据进行比对，如果重复的就报错
+*/
 func (u *UserHandler) Login(ctx *gin.Context) {
 	type LoginReq struct {
 		Email    string `json:"email"`
@@ -138,6 +145,7 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 		fmt.Println(err)
 	}
 }
+
 func (u *UserHandler) Edit(ctx *gin.Context) {
 
 }
