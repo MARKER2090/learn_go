@@ -6,11 +6,13 @@ import (
 	"smartbook/internal/repository/dao"
 )
 
+var ErrUserDuplicateEmail = dao.ErrUserDuplicateEmail
+
 type UserRepository struct {
 	dao *dao.UserDAO //层层递进
 }
 
-//直接调用dao数据库
+// 直接调用dao数据库
 func NewUserRepository(dao *dao.UserDAO) *UserRepository {
 	return &UserRepository{
 		dao: dao,

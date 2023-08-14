@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var ErrUserDuplicateEmail = repository.ErrUserDuplicateEmail
+
 type UserService struct {
 	repo *repository.UserRepository
 }
@@ -32,4 +34,9 @@ func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 	u.Password = string(hash)
 	//然后就是，村起来
 	return svc.repo.Create(ctx, u)
+}
+
+func (svc *UserService) Login(ctx context.Context, email string, password string) error {
+	//先找用户
+	//next:看到2：06
 }

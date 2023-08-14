@@ -13,6 +13,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+这就是层层传导的做法：可以只调用上一层的错误，而不需要直接调用到dao层面的err变量
+这样就不会跨层打交道了。
+*/
+var ErrUserDuplicateEmail = service.ErrUserDuplicateEmail //这个错误提示是层层传递的。
+var ErrUserDuplicateEmailV1 = fmt.Errorf("%w邮箱冲突", service.ErrUserDuplicateEmail)
+
 // 路由的处理
 type UserHandler struct {
 	svc         *service.UserService
@@ -105,6 +112,9 @@ func (u *UserHandler) SignUp(ctx *gin.Context) {
 		Email:    req.Email,
 		Password: req.Password,
 	})
+	if err == ErrUserDuplicateEmail { //通过层层调用的方式去调用各种
+		ctx.String(http.StatusOK, "邮箱冲突")
+	}
 	if err != nil {
 		fmt.Println(err)
 		ctx.String(http.StatusOK, "系统异常")
@@ -114,8 +124,19 @@ func (u *UserHandler) SignUp(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "注册成功")
 	fmt.Println("req是：", req)
 }
-func (u *UserHandler) SignIn(ctx *gin.Context) {
-
+func (u *UserHandler) Login(ctx *gin.Context) {
+	type LoginReq struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	var req LoginReq
+	if err := ctx.Bind(&req); err != nil { //Bind函数会将req里面的标签作为标志物区查找ctx里面的emial，然后提取数值出来给自己的email变量
+		return
+	}
+	err := u.svc.Login(ctx, req.Email, req.Password)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 func (u *UserHandler) Edit(ctx *gin.Context) {
 
