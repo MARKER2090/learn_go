@@ -51,3 +51,11 @@ mysql -uroot -p，然后密码是root（通过docker-compose.yaml文件查看）
 use smartbook;
 select * from user;
 就可以查看到存储的账号密码了。
+
+BCrypt加密：号称最安全的加密算法
+优点：
+1.不需要自己生成盐值
+2.不需要额外的存储盐值
+3.可以通过控制cost来控制加密性能
+4.同样的文本，加密的结果不同
+需要用到golang.org/x/crypto

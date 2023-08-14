@@ -6,9 +6,15 @@ package dao
 
 import (
 	"context"
+	"errors"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
+)
+
+var (
+	ErrUserDuplicateEmail = errors.New("邮箱冲突")
 )
 
 type UserDAO struct {
@@ -30,6 +36,14 @@ func (dao *UserDAO) Insert(ctx context.Context, u User) error {
 	now := time.Now().UnixMilli()
 	u.Utime = now
 	u.Ctime = now
+	err := dao.db.WithContext(ctx).Create(&u).Error //自己暂时还不知道这里的意思
+	if mysqlErr, ok := err.(*mysql.MySQLError); ok {
+		const uniqueConflictsErrNo uint16 = 1062
+		if mysqlErr.Number == 1062 {
+			//邮箱冲突(可以通过gorm.io/go-sql-driver/mysql去查看具体的错误代码)
+			return ErrUserDuplicateEmail
+		}
+	}
 	return dao.db.WithContext(ctx).Create(&u).Error //调用context可以让链路一直保持下去:这里其实我听不懂链路是啥
 
 }

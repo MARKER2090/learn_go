@@ -5,8 +5,11 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"smartbook/internal/domain"
 	"smartbook/internal/repository"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -21,6 +24,12 @@ func NewUserService(repo *repository.UserRepository) *UserService {
 
 func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 	//你要考虑加密放在哪里的问题了
+	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	u.Password = string(hash)
 	//然后就是，村起来
 	return svc.repo.Create(ctx, u)
 }
