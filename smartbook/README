@@ -1,4 +1,9 @@
 # readme
 该文件夹是一个smartbook的项目
 
-看到1:31
+项目启动步骤：
+1.启动docker-desktop
+2.在smartbook文件夹内命令行`docker compose up`
+3.在smartbook文件夹内命令行`go run main.go`
+
+2:26

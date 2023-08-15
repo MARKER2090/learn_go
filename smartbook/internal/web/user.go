@@ -53,7 +53,7 @@ func NewUserHandler(svc *service.UserService) *UserHandler {
 // create method of UserHandler
 func (c *UserHandler) RegitsterRouter(server *gin.Engine) {
 	server.GET("/profile", c.Profile)
-	server.POST("/signin", c.SignIn)
+	server.POST("/login", c.Login)
 	server.POST("/signup", c.SignUp)
 	server.POST("/edit", c.Edit)
 }
@@ -65,7 +65,7 @@ func (c *UserHandler) RegitsterRouter(server *gin.Engine) {
 func (c *UserHandler) RegitsterRouterV1(ug *gin.RouterGroup) {
 	//ug := server.Group("/users") //注意：users后面不再加斜杠
 	ug.GET("/profile", c.Profile)
-	ug.POST("/signin", c.SignIn)
+	ug.POST("/login", c.Login)
 	ug.POST("/signup", c.SignUp)
 	ug.POST("/edit", c.Edit)
 }
@@ -141,9 +141,16 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 		return
 	}
 	err := u.svc.Login(ctx, req.Email, req.Password)
-	if err != nil {
-		fmt.Println(err)
+	if err == service.ErrInvalidUserOrPassword {
+		ctx.String(http.StatusOK, "用户名/密码不对")
+		return
 	}
+	if err != nil {
+		ctx.String(http.StatusOK, "系统错误")
+		return
+	}
+	ctx.String(http.StatusOK, "登录成功")
+	return
 }
 
 func (u *UserHandler) Edit(ctx *gin.Context) {
