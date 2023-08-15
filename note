@@ -59,3 +59,27 @@ BCrypt加密：号称最安全的加密算法
 3.可以通过控制cost来控制加密性能
 4.同样的文本，加密的结果不同
 需要用到golang.org/x/crypto
+
+cookie的理解：
+name:
+value:
+path:在那条路径下生效
+domain:在哪里生效
+expires:cookies什么时候过期
+rawexpires:原始的数据
+maxage:cookie最多保存多长时间
+secure:bool，如果是true就只能是https访问(生产环境永远为true)
+httponly:只在在浏览器访问的时候带上去，自己通过js脚本就访问不了(生产环境永远为true)
+samesite:。。。
+raw:...
+unparsed:...
+
+课件上的说明：
+Domain: 也就是 Cookie 可以用在什么域名下，按照最小化原则来设定。
+Path：Cookie 可以用在什么路径下，同样按照最小化原则来设定。
+Max-Age 和 Expires：过期时间，只保留必要时间。
+Http-Only：设置为 true 的话，那么浏览器上的 JS 代码将无法使用这个 Cookie。永远设置为 true。
+Secure：只能用于 HTTPS 协议，生产环境永远设置为 true。
+SameSite：是否允许跨站发送 Cookie，尽量避免。
+
+cookie不安全所以不会存点
