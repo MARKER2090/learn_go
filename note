@@ -101,3 +101,44 @@ EOF
 
 sudo yum install -y kubectl
 
+
+==========================
+然后就需要一个Dockerfile文件
+文件内容如下：
+# 基础镜像:fedora
+FROM fedora
+
+# 拷贝smartbook可执行文件（linux环境下的）到/app文件夹内，其实app文件夹不写死，也可以放在/user/local文件夹下的
+COPY smartbook /app/smartbook
+# 工作目录是/app
+WORKDIR /app
+
+# CMD是执行命令
+# ENTRYPOINT是最佳实践
+ENTRYPOINT ["/app/smartbook"]
+
+==========================
+如果逐个敲代码的话，可以使用make文件来进行脚本的构建（如果没有安装make，就需要sudo yum install make)
+window环境下安装make比较麻烦！
+makefile内容如下：(linux环境下)
+.PHONY: docker
+docker:
+	@rm webook || true
+	@go build -tags=k8s -o webook .
+	@docker rmi -f deyen/smartbook:v0.0.1
+	@docker build -t deyen/smartbook-live:v0.0.1 .
+
+命令行解释：
+.PHONY可以理解为名称的意思，如果是.PHONY: docker，在执行命令的时候就要写make docker;如果是.PHONY: AAA，在命令行里面就要写make AAA。(经过自己的验证，好像也不是那么一回事)
+-tags 参数就是带有标签的意思;
+makefile内容如下：(window环境下)
+.PHONY: docker
+docker:
+	@rm webook || true
+	@GOOS=linux GOARCH=arm go build -tags=k8s -o webook .
+	@docker rmi -f deyen/smartbook:v0.0.1
+	@docker build -t deyen/smartbook-live:v0.0.1 .
+
+通过make docker来执行makefile文件
+==========================
+
