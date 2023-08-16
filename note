@@ -85,3 +85,19 @@ SameSite：是否允许跨站发送 Cookie，尽量避免。
 cookie不安全所以不会存数据敏感的内容，都是存一些无关要紧的东西
 session都是存放数据敏感的的内容
 session插件：https://github.com/gin-contrib/sessions
+
+
+==========================
+安装k8s
+命令行输入以下内容：
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key
+EOF
+
+sudo yum install -y kubectl
+

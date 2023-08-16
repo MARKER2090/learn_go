@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"smartbook/internal/repository"
 	"smartbook/internal/repository/dao"
 	"smartbook/internal/service"
@@ -26,11 +27,16 @@ import (
 
 func main() {
 	//首先进行数据库初始化
-	db := initDB()
+	//db := initDB()
 	//进行网页初始化
-	router := initWebServer() //返回一个*gin.Engine
-	initUser(router, db)
+	//router := initWebServer() //返回一个*gin.Engine
+	//initUser(router, db)
 
+	//为了使用k8s部署多个web service服务，暂且不使用mysql和redis
+	router := gin.Default()
+	router.GET("/hello", func(ctx *gin.Context) {
+		ctx.String(http.StatusOK, "hello!world!")
+	})
 	router.Run(":8082") //运行框架
 }
 
