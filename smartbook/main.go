@@ -15,6 +15,8 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
 	//"gorm.io/driver/sqlite"
@@ -67,6 +69,11 @@ func initWebServer() *gin.Engine {
 		},
 		MaxAge: 12 * time.Hour,
 	}))
+
+	//创建一个store
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store)) //mysession对应的cookie的名字，store是贮存的seesion值
+
 	return router
 }
 

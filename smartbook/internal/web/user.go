@@ -10,6 +10,7 @@ import (
 	"smartbook/internal/domain"
 	"smartbook/internal/service"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -140,7 +141,7 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	if err := ctx.Bind(&req); err != nil { //Bind函数会将req里面的标签作为标志物区查找ctx里面的emial，然后提取数值出来给自己的email变量
 		return
 	}
-	err := u.svc.Login(ctx, req.Email, req.Password)
+	user, err := u.svc.Login(ctx, req.Email, req.Password)
 	if err == service.ErrInvalidUserOrPassword {
 		ctx.String(http.StatusOK, "用户名/密码不对")
 		return
@@ -149,6 +150,13 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "系统错误")
 		return
 	}
+	//登录成功了
+	//设置session
+	sess := sessions.Default(ctx)
+	//我就可以随便设置session的数值了，也就是放在session里面的数值
+	sess.Set("userId", user.Id)
+	sess.Save()
+
 	ctx.String(http.StatusOK, "登录成功")
 	return
 }

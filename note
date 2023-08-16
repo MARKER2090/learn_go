@@ -82,4 +82,6 @@ Http-Only：设置为 true 的话，那么浏览器上的 JS 代码将无法使�
 Secure：只能用于 HTTPS 协议，生产环境永远设置为 true。
 SameSite：是否允许跨站发送 Cookie，尽量避免。
 
-cookie不安全所以不会存点
+cookie不安全所以不会存数据敏感的内容，都是存一些无关要紧的东西
+session都是存放数据敏感的的内容
+session插件：https://github.com/gin-contrib/sessions

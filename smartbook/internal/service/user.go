@@ -38,21 +38,21 @@ func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 	return svc.repo.Create(ctx, u)
 }
 
-func (svc *UserService) Login(ctx context.Context, email string, password string) error {
+func (svc *UserService) Login(ctx context.Context, email string, password string) (domain.User, error) {
 	//先找用户
 	u, err := svc.repo.FindByEmail(ctx, email)
 	if err == repository.ErrUserNotFound { //如果用户找不到
-		return ErrInvalidUserOrPassword
+		return domain.User{}, ErrInvalidUserOrPassword
 	}
 	if err != nil {
 		fmt.Println(err)
-		return err
+		return domain.User{}, err
 	}
 	//比较密码了
 	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 	if err != nil {
 		//debug，打印到日志
-		return ErrInvalidUserOrPassword //这里比较密码，如果密码对不上，那么就是返回邮箱/帐号/密码不对
+		return domain.User{}, ErrInvalidUserOrPassword //这里比较密码，如果密码对不上，那么就是返回邮箱/帐号/密码不对
 	}
-	return nil
+	return u, nil
 }
