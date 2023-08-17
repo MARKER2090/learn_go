@@ -1,0 +1,32 @@
+# 如何解释则和一份配置，或者说怎么处理这一份配置
+apiVersion: apps/v1
+# 声明我这里配配置的是 Deloyment
+kind: Deployment
+metadata:
+  # 也叫做smartbook，但这是一个deployment
+  name: smartbook
+# 规格说明也就是我这个deployment究竟部署的是什么东西
+spec:
+  # 副本数量:也就是有多少个副本
+  replicas: 3
+  selector:
+    matchLabels:
+      app: smartbook
+# 描述你的pod是什么样的
+  template:
+    metadata:
+      # 标签
+      labels:
+        app: smartbook
+    # pod里面的具体信息
+    spec:
+      containers:
+        -name: smartbook
+        # 镜像：是哪个镜像？
+        image: smartbook:v0.0.1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 8080
