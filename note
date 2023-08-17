@@ -88,6 +88,10 @@ session插件：https://github.com/gin-contrib/sessions
 
 
 ==========================
+K8S初认识：
+k8s就是管理容器的，我们通过容器发布应用，如果发布得多了，就需要一个管理者，k8s就是了。
+我们需要将应用打包成为一个可以在linux环境下运行的应用，然后通过docker命令来打包到容器中，通过k8s的deployment配置文件来告诉k8s的deployment来管理我们的已经打包好可运行的应用。
+==========================
 安装k8s
 命令行输入以下内容：
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
@@ -100,7 +104,6 @@ gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key
 EOF
 
 sudo yum install -y kubectl
-
 
 ==========================
 然后就需要一个Dockerfile文件
@@ -140,5 +143,7 @@ docker:
 	@docker build -t deyen/smartbook-live:v0.0.1 .
 
 通过make docker来执行makefile文件
+
+注意：如果重复构建的话，docker-desktop上的应用那个创建时间依然是之前开始构建的时间，如果对应用内代码进行了小改动，才会被docker-desktop认为是新的应用
 ==========================
 
