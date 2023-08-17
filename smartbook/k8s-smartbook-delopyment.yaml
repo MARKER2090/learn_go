@@ -21,12 +21,9 @@ spec:
     # pod里面的具体信息
     spec:
       containers:
-        -name: smartbook
+        - name: smartbook
         # 镜像：是哪个镜像？
-        image: smartbook:v0.0.1
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
-          - containerPort: 8080
+          image: smartbook:v0.0.1
+        # 开放的端口：要和服务里的端口一样，我的service端口是8082
+          ports:
+            - containerPort: 8082

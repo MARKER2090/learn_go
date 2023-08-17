@@ -147,3 +147,16 @@ docker:
 注意：如果重复构建的话，docker-desktop上的应用那个创建时间依然是之前开始构建的时间，如果对应用内代码进行了小改动，才会被docker-desktop认为是新的应用
 ==========================
 
+启动kubernetes
+将应用打包成docker的应用后，利用kubernetes进行部署，需要提前写好deployments.yaml文件
+然后命令行输入kubectl apply -f k8s-smartbook-deployments.yaml
+通过kubectl get deployments，查看自己已经启动的”运维“，也就是pods们的管理者deloyments
+通过kubectl get pods，查看自己已经启动的pods容器（一个容器可以装很多个应用服务）
+下面是实时代码显示：
+[deyen@deyen smartbook]$ kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+smartbook-5567f7bd6f-79kqc   1/1     Running   0          28s
+smartbook-5567f7bd6f-8tlnj   1/1     Running   0          29s
+smartbook-5567f7bd6f-bqwb2   1/1     Running   0          27s
+
+看到2：33
