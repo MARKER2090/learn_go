@@ -159,4 +159,15 @@ smartbook-5567f7bd6f-79kqc   1/1     Running   0          28s
 smartbook-5567f7bd6f-8tlnj   1/1     Running   0          29s
 smartbook-5567f7bd6f-bqwb2   1/1     Running   0          27s
 
-看到2：33
+==========================
+deployments文件内关键字说明：
+apiVersion是说明
+spec是specification规格说明，可以理解为说明书
+• replicas：值为 3，也就是我这个 Deployment 有三个副本，实际上就是三个 Pod。
+• selector：筛选器，就是在 K8s 的一大堆 Pod 里面，我怎么知道哪些是我管理的那三个。在我的deployments文件里，只要管理带有smart值的app标签就行了
+• template：我该怎么创建每个 Pod，或者说每个Pod 长什么样。有了 template（模板），我就可以照猫画虎直接创建出来了。
+
+==========================
+service文档：
+说明：单纯一个deployments文件是无法通过外面访问的，需要封装pods为逻辑上的服务，也就是service。
+
