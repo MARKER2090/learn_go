@@ -44,7 +44,7 @@ type UserDetail struct {
 }
 
 type UserCrefend struct { //用户装用户的帐号和密码的，因为帐号和密码的调用是比较高频的，所以可以单独作为一个结构体去被总的表格去嵌入
-
+	// 以后需要使用的时候就可以内嵌
 }
 
 type UserDAO struct {
