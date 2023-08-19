@@ -1,3 +1,4 @@
+# 该文件是用于docker部署应用的时候配置文件
 version: '3.0'
 services:
   mysql8:
@@ -10,7 +11,7 @@ services:
       # 设置初始化脚本
       - ./script/mysql/:/docker-entrypoint-initdb.d/
     ports:
-      # 13316是我自己的端口，3306是docker暴露给我的端口
+      # 13316是我自己应用的mysql端口，3306是docker是我应用的端口的映射,也就是通过docker的3306可以访问到我的应用的mysql数据库的13316端口
       - "13316:3306"
   redis:
     image: 'bitnami/redis:latest'

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: smartbook-mysql
+spec:
+  selector:
+    app: smartbook-mysql
+  ports:
+    - protocol: TCP
+      # port是外部范围service的端口号，3306是目标导向的端口号，是mysql的docker端口号；你可以理解为service的13309指向pods上的3306,pods的3306就是docker运行的容器的3306端口，3306指向的就是mysql数据库的13316端口，总的来说就是通过13309来访问到13316的mysql的数据
+      port: 13309
+      targetPort: 3306
+  #type: NodePort
+  type: LoadBalancer

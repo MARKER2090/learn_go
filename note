@@ -17,6 +17,8 @@ println(utf8.RuneCountInString("你好"))
 字符串处理：
 使用strings包就可以了。
 
+==================
+middleware中间件的理解：
 如果看到控制台上出现“CORS"就是代表着遇到了跨域问题了。
 一般全部都是浏览器的拦截。
 理解：
@@ -32,6 +34,7 @@ println(utf8.RuneCountInString("你好"))
 网站上有很多插件是可以解决各种跨域问题的，但是要注意有部分是有并发问题的。需要谨慎
 https://github.com/gin-gonic/contrib/cors就是用来解决cors问题的
 
+==================
 Service-Repostiory-DAO三层结构:
 领域的界限也业务大小有关
 service：代表domain service领域服务
@@ -41,7 +44,26 @@ domain：代表领域对象
 
 调用流程：web（和http打交道）——>service(主要业务逻辑)——>repository（数据存储对象)——>dao(数据库操作)
 
+==================
 docker相关知识：
+
+docker基础知识：
+docker version:版本号
+docker info：关于本机上docker的所有信息
+docker --help：docker的具体命令
+docker images或者docker image ls：列出本地仓库里的docker镜像列表
+docker pull redis:从互联网拉取一个redis镜像到本地仓库里
+docker pull redis:8.0	就是拉取一个8.0版本的redis，如果不添加版本号就是默认拉取最新版本
+如果想要指定的版本，就需要去docker hub上进行查看了。
+docker search redis	就是通过命令行的形式搜索redis镜像，不用自己到docker hub上进行苦苦查找了。但是，是没有版本号的，只能说检验有没有这个镜像，想要特定的版本号还是需要自己通过官网去搜索查找具体的版本号
+
+普通删除：docker image rm (镜像名字)|(镜像id),这种如果遇到镜像运行过的了，是删除不了的。
+强制删除：docker image rm -f (镜像名字)|(镜像id)
+
+docker image redis : 只列出和redis相关的镜像
+docker image redis -q:只列出和redis相关的镜像的id
+
+docker课程知识：
 docker compose up -d 后台启动
 docker compose up 就是直接启动
 如何访问docker的mysql？
@@ -51,6 +73,35 @@ mysql -uroot -p，然后密码是root（通过docker-compose.yaml文件查看）
 use smartbook;
 select * from user;
 就可以查看到存储的账号密码了。
+
+-----------------------
+docker-compose.yaml文件的理解：
+以下是自己的文件的内容
+version: '3.0'
+services:
+  mysql8:
+    image: mysql:8.0.29
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      # 设置初始化脚本
+      - ./script/mysql/:/docker-entrypoint-initdb.d/
+    ports:
+      # 13316是我自己的端口，3306是docker暴露给我的端口
+# 13316是自己的main.go文件里面的gorm采用了mysql后采用的mysql的端口，我们通过13316可以不借助任何的其他软件就可以访问得到自己的mysql数据库的内容；
+# 3306是docker对于mysql端口的映射，可以理解是找docker说要访问mysql，就通过docker给出的3306端口就可以访问到了自己的mysql数据库(对应13316端口)了。 
+      - "13316:3306"
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+
+
+----------------------
 
 BCrypt加密：号称最安全的加密算法
 优点：
@@ -203,7 +254,20 @@ spec:
 在以上的type设置里面，如果是LoadBalancer，就是需要通过http://localhost:81/hello来访问自己的应用；
 如果是NodePort的话，就需要通过30379端口来访问，也就是通过http://loaclhost:30379/hello。该端口通过kubectl get service来查看smartbook的PORT来查看端口81:30379,81是loadbalancer端口的，30379是NodePort的。
 
-命令：kubectl log 
+命令：kubectl logs smartbook-5567f7bd6f-7zhb9，就可以查看smartbook-5567f7bd6f-7zhb9这个pod的日志了。
+
+smartbook-5567f7bd6f-7zhb9的由来：
+通过命令行输入：kubectl get pods来查看所有的pods，就可以查看到对应的某个pod的名称了。
+
+==========================
+kubernetes部署Mysql
+注意：k8s-mysql-deployment.yaml和k8s-mysql-service.yaml里面的app的名称是一一对应的
+
+端口方面的理解：
+用户/需要调用到myqsl的程序————service(端口是11307)————pods（端口是3306）
+11307是service暴露给外面去访问的端口，而3306是pods暴露给mysql的端口
+deployment文件里面的端口要对应pods上的端口，也就是3306
+
 
 
 (还需要继续学习补充)

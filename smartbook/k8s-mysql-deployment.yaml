@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartbook-mysql
+  labels:
+    app: smartbook-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smartbook-mysql
+  template:
+    metadata:
+      name: smartbook-mysql
+      labels:
+        app: smartbook-mysql
+    spec:
+      containers:
+        - name: smartbook-mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+          imagePullPolicy: IfNotPresent
+          ports:
+            # 因为mysql启动的默认端口就是3306，deployment这里的端口对应的是service的目标端口
+            - containerPort: 3306
+      restartPolicy: Always
