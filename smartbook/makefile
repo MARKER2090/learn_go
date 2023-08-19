@@ -1,4 +1,4 @@
-.PHONY: AAA
+.PHONY: docker
 docker:
 	@rm smartbook || true
 	@go build -tags=k8s -o smartbook .

@@ -170,4 +170,37 @@ spec是specification规格说明，可以理解为说明书
 ==========================
 service文档：
 说明：单纯一个deployments文件是无法通过外面访问的，需要封装pods为逻辑上的服务，也就是service。
+注意：service文件上的targetport端口要和deployments上的port端口，和smartbook应用里的Gin配置的端口一致，也就是自定义的8082
 
+==========================
+一般公司部署的kubernetes，都是外面使用https来访问，然后内部通信使用http的，很少内部也会使用https的
+访问自己部署的kubernetes的端口问题：
+通过命令行检查自己的service
+[deyen@deyen smartbook]$ kubectl get service
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP        6d16h
+smartbook    NodePort    10.98.116.41   <none>        81:30379/TCP   128m
+
+可以看得出自己的smartbook应用PORT里有81和30379端口，在service的yaml文件里,代码如下:
+apiVersion: v1
+kind: Service
+metadata:
+  # 代表的是我们的smartbook本体
+  name: smartbook
+  # 说明书
+spec:
+  #type: LoadBalancer
+  type: NodePort
+  selector:
+    app: smartbook
+  ports:
+    - name: http
+      protocol: TCP
+        # 81是kubernetes暴露在外部的端口，通过外部的81端口访问会直接对接到容器里面的8082端口
+      port: 81
+      targetPort: 8082
+
+在以上的type设置里面，如果是LoadBalancer，就是需要通过http://localhost:81/hello来访问自己的应用；
+如果是NodePort的话，就需要通过30379端口来访问，也就是通过http://loaclhost:30379/hello。该端口通过kubectl get service来查看smartbook的PORT来查看端口81:30379,81是loadbalancer端口的，30379是NodePort的。
+
+命令：kubectl log 

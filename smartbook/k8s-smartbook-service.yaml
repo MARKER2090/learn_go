@@ -5,12 +5,13 @@ metadata:
   name: smartbook
   # 说明书
 spec:
-  #type: LoadBalancer
-  type: NodePort
+  type: LoadBalancer
+    #type: NodePort
   selector:
     app: smartbook
   ports:
     - name: http
       protocol: TCP
+        # 81是kubernetes暴露在外部的端口，通过外部的81端口访问会直接对接到容器里面的8082端口
       port: 81
       targetPort: 8082
