@@ -204,3 +204,10 @@ spec:
 如果是NodePort的话，就需要通过30379端口来访问，也就是通过http://loaclhost:30379/hello。该端口通过kubectl get service来查看smartbook的PORT来查看端口81:30379,81是loadbalancer端口的，30379是NodePort的。
 
 命令：kubectl log 
+
+
+(还需要继续学习补充)
+==========================
+性能瓶颈：
+1.加密算法
+2.数据库查询
