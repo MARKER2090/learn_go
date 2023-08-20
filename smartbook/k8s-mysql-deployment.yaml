@@ -22,7 +22,24 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: root
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /mysql
+              # 这里指代的是我的程序需要使用volumes里面的哪个卷
+              # 这里的name需要和下面volumes的name要匹配上，
+              name: mysql-storage
           ports:
             # 因为mysql启动的默认端口就是3306，deployment这里的端口对应的是service的目标端口
             - containerPort: 3306
+        #- name: smartbook-hadoop#这里也可以多建立一个container的，也就是多部署一个持久化卷，不过下面的volumes就要多增加一个了，
       restartPolicy: Always
+    # volumes指代的是我的pod有那些持久化卷
+      volumes:
+        # mysql-storage所代表的东西是由claimName来声明的和决定的
+        - name: mysql-storage
+          persistenVolumeClaim:
+            # 这个claimname需要和k8s-mysql-pvc.yaml的metadata的name一致
+            claimName: smartbook-claim
+      # - name: hadoop-storage
+      #   persistenVolumeClaim:
+      #     claimName: smartbook-hadoop-claim
+

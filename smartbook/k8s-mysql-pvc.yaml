@@ -1,0 +1,22 @@
+# 这个文件是用来说明持久化卷到底需要点什么东西,描述mysql的贮存结构需要具备什么样子的特征
+# pvc => PersistenVolumeClaim
+apiVersion: v1
+kind: PersistenVolumeClaim
+metadata:
+  # 这是mysql需要用到的东西
+  name: smartbook-claim
+  labels:
+    app: smartbook-claim
+spec:
+  storageClassName: smartbok-storage
+  accessModes:
+    # 一个人读写:一个Pod去读写
+    - ReadWriteOnce
+    # 多个读，一个写
+    #- ReadOnlyMany
+    # 多个读写
+    #- ReadWriteMany
+  resources:
+    requests:
+      # 就是1 GB
+      storage: 1Gi

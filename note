@@ -63,6 +63,11 @@ docker search redis	就是通过命令行的形式搜索redis镜像，不用自�
 docker image redis : 只列出和redis相关的镜像
 docker image redis -q:只列出和redis相关的镜像的id
 
+运行镜像
+image是镜像，只要通过docker运行之后，就成为了容器container
+docker run -p 3660:8080 redis:3.0
+命令解释：进行运行redis3.0版本的，然后是通过宿主机的3660映射到docker上的8080,也就是通过系统上浏览器访问http://localhost:3660就可以访问到docker里面运行的tomcat容器了。(亲测成功)理解顺序就是从左到右，机器本身才是大环境，docker是在大环境里面的，我们通过大环境的3360直接到docker的8080
+
 docker课程知识：
 docker compose up -d 后台启动
 docker compose up 就是直接启动
@@ -268,6 +273,8 @@ kubernetes部署Mysql
 11307是service暴露给外面去访问的端口，而3306是pods暴露给mysql的端口
 deployment文件里面的端口要对应pods上的端口，也就是3306
 
+==========================
+持久化卷
 
 
 (还需要继续学习补充)
