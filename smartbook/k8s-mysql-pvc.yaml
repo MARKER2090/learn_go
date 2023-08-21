@@ -8,6 +8,7 @@ metadata:
   labels:
     app: smartbook-claim
 spec:
+  # 这里要和k8s-mysql-pv上的spec名字匹配得上
   storageClassName: smartbok-storage
   accessModes:
     # 一个人读写:一个Pod去读写

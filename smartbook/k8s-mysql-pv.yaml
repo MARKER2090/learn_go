@@ -1,0 +1,15 @@
+apiVersion: v1
+# 这个指的是我k8s有哪些volume
+kind: PersistenVolume
+metadata:
+  # 这个名字不重要
+  name: my-local-pv
+spec:
+  #这里的名字需要和k8s-mysql-pvc里的匹配得上
+  storageClassName: smartbok-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/live"
