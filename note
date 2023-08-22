@@ -278,6 +278,28 @@ deployment文件里面的端口要对应pods上的端口，也就是3306
 pvc => PersistenVolumeClaim可以理解为自己的mysql需要什么样子的持久化卷，而pv就是k8s可以提供的什么样子的持久化卷服务，然pvc和pv进行匹配用。
 pvc就是提出自己对持久化卷的要求，pv就是查找符合pvc要求的持久化卷出来给pvc用
 
+
+
+==========================
+ingress路由规则
+概念：
+1.ingress路由规则的配置文件
+2.ingress controller执行路由规则配置文件的
+理解：client上面的请求到达了ingress controller，然后它就会转发到对应的流量到service上，service再转到对应的pods上
+同样的ingress可以通过不同的controller来实现
+
+通过下面命令来安装helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+使用helm安装ingress-nginx，命令如下：（实测报错）
+helm upgrade --install ingress-nginx ingress-nginx \
+--repo https://kubernetes.github.io/ingress-nginx \
+--namespace ingress-nginx --create-namespace
+
+
+
 (还需要继续学习补充)
 ==========================
 性能瓶颈：
