@@ -298,6 +298,8 @@ helm upgrade --install ingress-nginx ingress-nginx \
 --repo https://kubernetes.github.io/ingress-nginx \
 --namespace ingress-nginx --create-namespace
 
+如果按照上面个的方式安装不了helm和ingress-nginx的话，就通过下面的教程去看看，还没实测
+https://www.cnblogs.com/syushin/p/15271304.html
 
 
 (还需要继续学习补充)
