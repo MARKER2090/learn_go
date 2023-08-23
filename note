@@ -264,6 +264,12 @@ spec:
 smartbook-5567f7bd6f-7zhb9的由来：
 通过命令行输入：kubectl get pods来查看所有的pods，就可以查看到对应的某个pod的名称了。
 
+
+==========================
+k8s删除应用的命令
+kubectl delete deployment smartbook
+kubectl delete service smartbook
+
 ==========================
 kubernetes部署Mysql
 注意：k8s-mysql-deployment.yaml和k8s-mysql-service.yaml里面的app的名称是一一对应的
@@ -301,8 +307,29 @@ helm upgrade --install ingress-nginx ingress-nginx \
 如果按照上面个的方式安装不了helm和ingress-nginx的话，就通过下面的教程去看看，还没实测
 https://www.cnblogs.com/syushin/p/15271304.html
 
+k8s就是一个局域网，局域网内的各个部件是通过端口进行互联互通的
 
-(还需要继续学习补充)
+==========================
+go build上的一些技巧：
+在go文件里，使用标签，可以编译不同的文件
+文件内代码如下：
+//go:build k8s
+
+package config
+
+(代码省略)......abcabc
+
+上面的代码是一个config包，里面的标签是k8s，所以在编译的时候，使用go build tags=k8s main.go的时候
+go会根据标签来进行检查，检查到是k8s的标签，才会使用这个包，否则就会使用其他的包来进行编译
+为了不混淆，另外一个config文件可以这样子打标签，文件内容如下：
+//go:build !k8s
+
+package config
+
+......
+
+这个就是go build main.go的时候默认编译用到的config包。这个包的标签是非k8s的就行。
+
 ==========================
 性能瓶颈：
 1.加密算法
