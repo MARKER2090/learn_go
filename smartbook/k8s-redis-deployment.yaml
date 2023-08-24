@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartbook-redis
+  labels:
+    app: smartbook-redis
+# 说明书
+spec:
+  # 副本数量
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smartbook-redis
+  template:
+    metadata:
+      name: smartbook-redis
+      labels:
+        app: smartbook-redis
+    spec:
+      containers:
+        - name: smartbook-redis
+          image: redis:latest
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
