@@ -64,13 +64,19 @@ func (dao *UserDAO) FindByEmail(ctx context.Context, email string) (User, error)
 	return u, err
 }
 
+func (dao *UserDAO) FindById(ctx context.Context, id int64) (User, error) {
+	var u User
+	err := dao.db.WithContext(ctx).Where("`id` = ?", id).First(&u).Error
+	return u, err
+}
+
 /*
 functions：往数据库内存入用户信息
 arguments:上下文，用户结构体
 return:error
 tips：
 1.传入都传入结构体，记住！将context作为第一个参数，然后error作为返回值就可以了。这里好习惯!该函数是强耦合的，因为和mysql进行链接的，如果不用mysql，该函数是会报错的。
-2.不需要使用分布式锁，因为如果通过并发去查询然后没查到后加入到数据库，会导致重复加入导致报错，且邮箱一直的情况会比较少，所以没必要用大的力气放在极小部分的服务上,迫不得已才使用分布式锁
+2.不需要使用分布式锁，因为如果通过并发去查询然后没查到后加入到数据库，会导致重复加入导致报错，且邮箱一致的情况会比较少，所以没必要用大的力气放在极小部分的服务上,迫不得已才使用分布式锁
 3.使用insert符合数据库的命名习惯
 */
 func (dao *UserDAO) Insert(ctx context.Context, u User) error {
