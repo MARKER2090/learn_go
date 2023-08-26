@@ -9,7 +9,7 @@ import (
 
 func TestEncrypt(t *testing.T) {
 	password := "helloworld123"
-	//对密码进行加密
+	//对密码进行加密,encrypted就是加密后的字符
 	encrypted, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		t.Fatal(err)
