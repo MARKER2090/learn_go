@@ -142,6 +142,13 @@ cookie不安全所以不会存数据敏感的内容，都是存一些无关要�
 session都是存放数据敏感的的内容
 session插件：https://github.com/gin-contrib/sessions
 
+让服务器识别是不是你自己的方法就是通过存在的sess_id来进行判断
+sess_id最佳的放置地方就是cookie里，但是如果国外的比较注重隐私的话，有些网站是不允许使用cookie的，就只能放在Header上了，也可以考虑放在query上
+sess_id存放的地方：
+1.cookie
+2.header
+3.query
+
 
 ==========================
 K8S初认识：
