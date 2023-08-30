@@ -75,7 +75,7 @@ func initWebServer() *gin.Engine {
 		MaxAge: 12 * time.Hour,
 	}))
 
-	//创建一个store
+	//创建一个store用来装sess_id的
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store)) //mysession对应的cookie的名字，store是贮存的seesion值
 

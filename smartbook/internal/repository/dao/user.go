@@ -6,6 +6,7 @@ package dao
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 
@@ -18,12 +19,28 @@ var (
 	ErrUserNotFound       = gorm.ErrRecordNotFound
 )
 
+type UserDAO interface {
+	FindByEmail(ctx context.Context, email string) (User, error)
+	FindById(ctx context.Context, id int64) (User, error)
+	FindByPhone(ctx context.Context, phone string) (User, error)
+	Insert(ctx context.Context, u User) error
+}
+
+type GORMUserDAO struct {
+	db *gorm.DB
+}
+
 // User直接对应数据库表结构
 // 有些人叫做entity，有些人叫做model，有些人叫做PO(persistent object)
 type User struct { //这里的user是直接对标数据库的
-	Id       int64  `gorm:"primaryKey,autoIncrement"`
-	Email    string `gorm:"unique"`
+	Id int64 `gorm:"primaryKey,autoIncrement"`
+	//全部用户都是邮箱唯一的
+	Email    sql.NullString `gorm:"unique"`
 	Password string
+
+	//唯一索引允许多个空值，但是不能多个“”
+	phone sql.NullString `gorm:"unique"` //这样写，如果引用需要判空
+	//phone string
 
 	//如果需要添加额外的字段，可以通过这里添加
 	//UserDetail//实现用户的不同内容的统一管理
@@ -47,27 +64,34 @@ type UserCrefend struct { //用户装用户的帐号和密码的，因为帐号�
 	// 以后需要使用的时候就可以内嵌
 }
 
-type UserDAO struct {
-	db *gorm.DB
-}
-
-func NewUserDAO(db *gorm.DB) *UserDAO {
-	return &UserDAO{
+func NewUserDAO(db *gorm.DB) UserDAO {
+	return &GORMUserDAO{
 		db: db,
 	}
 }
 
-func (dao *UserDAO) FindByEmail(ctx context.Context, email string) (User, error) {
+func (dao *GORMUserDAO) FindByEmail(ctx context.Context, email string) (User, error) {
 	var u User
 	err := dao.db.WithContext(ctx).Where("email = ?", email).First(&u).Error
 	//err := dao.db.WithContext(ctx).First(&u,"email = ?", email).Error//上面和这个写法都是一样的。
 	return u, err
 }
 
-func (dao *UserDAO) FindById(ctx context.Context, id int64) (User, error) {
+func (dao *GORMUserDAO) FindById(ctx context.Context, id int64) (User, error) {
 	var u User
 	err := dao.db.WithContext(ctx).Where("`id` = ?", id).First(&u).Error
 	return u, err
+}
+
+/*
+functions:查找电话号码
+arguments:
+return:
+tips:
+*/
+func (dao *GORMUserDAO)FindByPhone(ctx context.Context,phone string)(User,error){
+	var u User
+	err:=dao.db.
 }
 
 /*
@@ -79,7 +103,7 @@ tips：
 2.不需要使用分布式锁，因为如果通过并发去查询然后没查到后加入到数据库，会导致重复加入导致报错，且邮箱一致的情况会比较少，所以没必要用大的力气放在极小部分的服务上,迫不得已才使用分布式锁
 3.使用insert符合数据库的命名习惯
 */
-func (dao *UserDAO) Insert(ctx context.Context, u User) error {
+func (dao *GORMUserDAO) Insert(ctx context.Context, u User) error {
 	//存毫秒数：喜好问题，高并发一秒有好千个好几百个用户，按照实际业务去设定即可。最少精确到毫秒数即可
 	now := time.Now().UnixMilli()
 	//select * from users where email = 123@qq.com for update，在写这个语句进行查询的时候就会进行锁住
