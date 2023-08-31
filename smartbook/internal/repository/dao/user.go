@@ -89,9 +89,10 @@ arguments:
 return:
 tips:
 */
-func (dao *GORMUserDAO)FindByPhone(ctx context.Context,phone string)(User,error){
+func (dao *GORMUserDAO) FindByPhone(ctx context.Context, phone string) (User, error) {
 	var u User
-	err:=dao.db.
+	err := dao.db.WithContext(ctx).Where("phone=?", phone).First(&u).Error
+	return u, err
 }
 
 /*

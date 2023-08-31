@@ -12,8 +12,18 @@ var (
 	ErrUserNotFound       = dao.ErrUserNotFound
 )
 
-type UserRepository struct {
-	dao *dao.UserDAO //层层递进,实际就是*gorm.DB数据库
+//满足四项内容的就是属于UserRepository
+type UserRepository interface {
+	FindByEmail(ctx context.Context, email string) (domain.User, error)
+	FindByPhone(ctx context.Context, phone string) (domain.User, error)
+	Create(ctx context.Context, u domain.User) error
+	FindById(ctx context.Context, id int64) (domain.User, error)
+}
+
+type CacheUserRepository struct {
+	dao   dao.UserDAO
+	cache cache.UserCache
+	//next：完善代码
 }
 
 // 直接调用dao数据库
