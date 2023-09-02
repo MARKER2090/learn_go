@@ -1,3 +1,9 @@
+/*
+该程序就是一个单元测试文件
+如果想要：
+1.测试该文件，用go test user_test.go
+2.测试所有文件，用go test .
+*/
 package web
 
 import (
