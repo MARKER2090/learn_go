@@ -39,7 +39,7 @@ type User struct { //这里的user是直接对标数据库的
 	Password string
 
 	//唯一索引允许多个空值，但是不能多个“”
-	phone sql.NullString `gorm:"unique"` //这样写，如果引用需要判空
+	Phone sql.NullString `gorm:"unique"` //这样写，如果引用需要判空
 	//phone string
 
 	//如果需要添加额外的字段，可以通过这里添加
