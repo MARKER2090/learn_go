@@ -21,9 +21,18 @@ import (
 var ErrUserDuplicateEmail = service.ErrUserDuplicateEmail //这个错误提示是层层传递的。
 var ErrUserDuplicateEmailV1 = fmt.Errorf("%w邮箱冲突", service.ErrUserDuplicateEmail)
 
+const biz = "login"
+
+// 确保 UserHandler 上实现了 handler 接口
+var _ handler = &UserHandler{}
+
+// 这个更优雅
+var _ handler = (*UserHandler)(nil)
+
 // 路由的处理
 type UserHandler struct {
-	svc         *service.UserService
+	svc         service.UserService
+	codeSvc     service.CodeService
 	emailExp    *regexp.Regexp
 	passwordExp *regexp.Regexp
 }
@@ -34,21 +43,21 @@ arguments:nil
 return:指针
 tips:就是一个简单的golang自带的正则表达式编译
 */
-func NewUserHandler(svc *service.UserService) *UserHandler {
+func NewUserHandler(svc service.UserService, codeSvc service.CodeService) *UserHandler {
 	const ( //如果正则表达式比较复杂，可以多写几个逻辑要求来对邮箱和密码进行处理，弥补自己正则表达式的书写缺陷
 		//定义email的正则表达式:随意搭配+@+随意搭配+.com，自己写的正则表达式
 		emailRegexPttern = `[a-zA-Z0-9]+@\w+(\.com)$`
 		//定义密码的正则表达式：必须含有英文和中文和特殊符号,且不小于8位数,自己写的要求可以填入非空字符，要求8个以上
 		passwordRegexPttern = `\S{8,50}`
 	)
-	emailExp_compiled := regexp.MustCompile(emailRegexPttern)
-	passwordExp_compiled := regexp.MustCompile(passwordRegexPttern)
+	emailExp := regexp.MustCompile(emailRegexPttern)
+	passwordExp := regexp.MustCompile(passwordRegexPttern)
 	return &UserHandler{
 		svc:         svc,
-		emailExp:    emailExp_compiled,
-		passwordExp: passwordExp_compiled,
+		emailExp:    emailExp,
+		passwordExp: passwordExp,
+		codeSvc:     codeSvc,
 	}
-
 }
 
 // create method of UserHandler
