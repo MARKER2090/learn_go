@@ -62,7 +62,8 @@ func NewUserHandler(svc service.UserService, codeSvc service.CodeService) *UserH
 
 // create method of UserHandler
 func (c *UserHandler) RegitsterRouter(server *gin.Engine) {
-	server.GET("/profile", c.Profile)
+	ug := server. //next写道这里了
+			server.GET("/profile", c.Profile)
 	server.POST("/login", c.Login)
 	server.POST("/signup", c.SignUp)
 	server.POST("/edit", c.Edit)
@@ -72,12 +73,12 @@ func (c *UserHandler) RegitsterRouter(server *gin.Engine) {
 这是分组管理的方法
 避免路由种类太多导致管理麻烦，或者输入前缀容易出错
 */
-func (c *UserHandler) RegitsterRouterV1(ug *gin.RouterGroup) {
+func (u *UserHandler) RegitsterRouterV1(ug *gin.RouterGroup) {
 	//ug := server.Group("/users") //注意：users后面不再加斜杠
-	ug.GET("/profile", c.Profile)
-	ug.POST("/login", c.Login)
-	ug.POST("/signup", c.SignUp)
-	ug.POST("/edit", c.Edit)
+	ug.GET("/profile", u.Profile)
+	ug.POST("/login", u.Login)
+	ug.POST("/signup", u.SignUp)
+	ug.POST("/edit", u.Edit)
 }
 
 func (u *UserHandler) SignUp(ctx *gin.Context) {
