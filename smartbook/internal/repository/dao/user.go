@@ -57,7 +57,9 @@ type User struct { //这里的user是直接对标数据库的
 }
 
 type UserDetail struct {
-	name string //姓名
+	NickName         string //姓名
+	BirthDay         string //生日(格式：1991-01-01)
+	PersionalProfile string //个人简介(一段文本，考虑允许长度)
 }
 
 type UserCrefend struct { //用户装用户的帐号和密码的，因为帐号和密码的调用是比较高频的，所以可以单独作为一个结构体去被总的表格去嵌入

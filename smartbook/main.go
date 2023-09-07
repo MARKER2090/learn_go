@@ -115,7 +115,8 @@ func initDB() *gorm.DB {
 		//panic(err)
 	}
 
-	err = dao.InitTable(db)
+	err = dao.InitTable(db) //新建一个表格，其实如果简单点来理解的话，就是直接使用db来新建一个表格
+	//db.AutoMigrate(&User{})
 	if err != nil {
 		panic(err)
 	}

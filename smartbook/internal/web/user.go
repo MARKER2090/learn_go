@@ -61,12 +61,20 @@ func NewUserHandler(svc service.UserService, codeSvc service.CodeService) *UserH
 }
 
 // create method of UserHandler
-func (c *UserHandler) RegitsterRouter(server *gin.Engine) {
-	ug := server. //next写道这里了
-			server.GET("/profile", c.Profile)
-	server.POST("/login", c.Login)
-	server.POST("/signup", c.SignUp)
-	server.POST("/edit", c.Edit)
+func (u *UserHandler) RegitsterRouter(server *gin.Engine) {
+	ug := server.Group("/users") //next写道这里了
+	server.GET("/profile", u.ProfileJWT)
+	server.POST("/login", u.LoginJWT)
+	//server.POST("/login", u.Login)
+	server.POST("/signup", u.SignUp)
+	server.POST("/edit", u.Edit)
+	// PUT "/login/sms/code" 发验证码
+	// POST "/login/sms/code" 校验验证码
+	// POST /sms/login/code
+	// POST /code/sms
+	//下面的代码等我做好作业之后再处理
+	//ug.POST("/login_sms/code/send", u.SendLoginSMSCode)
+	//ug.POST("/login_sms", u.LoginSMS)
 }
 
 /*
