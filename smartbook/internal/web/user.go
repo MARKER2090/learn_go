@@ -61,7 +61,7 @@ func NewUserHandler(svc service.UserService, codeSvc service.CodeService) *UserH
 }
 
 // create method of UserHandler
-func (u *UserHandler) RegitsterRouter(server *gin.Engine) {
+func (u *UserHandler) RegitsterRoutes(server *gin.Engine) {
 	ug := server.Group("/users") //next写道这里了
 	server.GET("/profile", u.ProfileJWT)
 	server.POST("/login", u.LoginJWT)
@@ -81,7 +81,7 @@ func (u *UserHandler) RegitsterRouter(server *gin.Engine) {
 这是分组管理的方法
 避免路由种类太多导致管理麻烦，或者输入前缀容易出错
 */
-func (u *UserHandler) RegitsterRouterV1(ug *gin.RouterGroup) {
+func (u *UserHandler) RegitsterRoutesV1(ug *gin.RouterGroup) {
 	//ug := server.Group("/users") //注意：users后面不再加斜杠
 	ug.GET("/profile", u.Profile)
 	ug.POST("/login", u.Login)
@@ -90,7 +90,7 @@ func (u *UserHandler) RegitsterRouterV1(ug *gin.RouterGroup) {
 }
 
 func (u *UserHandler) SignUp(ctx *gin.Context) {
-	//定义注册的string结构体
+	//定义注册的string结构体,用于接收前端页面接收回来的json数据
 	type SignUpReq struct {
 		Email           string `json:"email"`
 		ConfirmPassword string `json:"confirmPassword"`
@@ -107,6 +107,8 @@ func (u *UserHandler) SignUp(ctx *gin.Context) {
 	if err := ctx.Bind(&req); err != nil {
 		return
 	}
+	//u是UserHander的指针，指针上的emial正则表达式查找返回体的email，如果查找到了error为nil
+	//下面的if和eles是自己的逻辑，和视频说的代码有细微区别，因为自己使用的是官方的包，不是第三方regexp包
 	emailIsExist := u.emailExp.MatchString(req.Email)
 	if emailIsExist == false {
 		//检测到存在,也就是通过了测试，邮箱没有问题
@@ -179,7 +181,35 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	return
 }
 
+func (u *UserHandler) Logout(ctx *gin.Context) {
+	sess := sessions.Default(ctx)
+	// 我可以随便设置值了
+	// 你要放在 session 里面的值
+	sess.Options(sessions.Options{
+		//Secure: true,
+		//HttpOnly: true,
+		MaxAge: -1,
+	})
+	sess.Save()
+	ctx.String(http.StatusOK, "退出登录成功")
+}
+
+// edit：编辑功能允许用户补充基本个人信息，包括：
+// 昵称：字符串，你需要考虑允许的长度。
+// 生日：前端输入为 1992-01-01 这种字符串。
+// 个人简介：一段文本，你需要考虑允许的长度。
+// 尝试校验这些输入，并且返回准确的信息
 func (u *UserHandler) Edit(ctx *gin.Context) {
+	//新建结构体，用于接受web端的数据的。
+	type EditReq struct {
+		NickName         string `json:"nickname"`
+		BirthDay         string `json:"birthday"`
+		PersionalProfile string `json:"persionalprofile"`
+	}
+	var editreq EditReq
+	if err := ctx.Bind(&editreq); err != nil { //通过ctx查找结构体内的字段，如果找到了
+		return
+	}
 
 }
 func (u *UserHandler) Profile(ctx *gin.Context) {
